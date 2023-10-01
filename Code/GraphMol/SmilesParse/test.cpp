@@ -16,7 +16,7 @@
 #include "SmartsWrite.h"
 #include <GraphMol/FileParsers/FileParsers.h>
 #include <RDGeneral/RDLog.h>
-//#include <boost/log/functions.hpp>
+// #include <boost/log/functions.hpp>
 using namespace RDKit;
 using namespace std;
 typedef ROMol Mol;
@@ -4385,7 +4385,7 @@ void testGithub3967() {
 void testGithub6349() {
   BOOST_LOG(rdInfoLog) << "-------------------------------------" << std::endl;
   BOOST_LOG(rdInfoLog)
-      << "Testing Github Issue 6349: Different input format leads to a different molecule."
+      << "Testing Github Issue 6349: Different SMARTS input formats lead to different SMILES outputs."
       << std::endl;
 
   auto checkSmartsToSmiles = [](const std::string &sma,
