@@ -838,7 +838,7 @@ class TestCase(unittest.TestCase):
                          'list-query.mol')
     query = Chem.MolFromMolFile(fileN)
     smi = Chem.MolToSmiles(query)
-    self.assertEqual(smi, 'c1ccccc1')
+    self.assertEqual(smi, '*1ccccc1')
     smi = Chem.MolToSmarts(query)
     self.assertEqual(smi, '[#6]1:[#6]:[#6]:[#6]:[#6]:[#6,#7,#15]:1')
     smi = Chem.MolToSmarts(query, rootedAtAtom=5)
