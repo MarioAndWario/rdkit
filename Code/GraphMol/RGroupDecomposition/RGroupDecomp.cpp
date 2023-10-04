@@ -148,9 +148,11 @@ int RGroupDecomposition::getMatchingCoreInternal(
               SubstructMatch(mol, *core.second.matchingMol, sssparams);
         }
       } else {
+        // HERE
+        std::cout << "non-tautomer matching\n";
         baseMatches = SubstructMatch(mol, *core.second.matchingMol, sssparams);
       }
-      
+      // BUGS BEFORE the for loop
       tmatches.clear();
       for (const auto &baseMatch : baseMatches) {
         // Match the R Groups
@@ -272,6 +274,7 @@ int RGroupDecomposition::add(const ROMol &inmol) {
   std::vector<MatchVectType> tmatches;
   auto core_idx = getMatchingCoreInternal(mol, rcore, tmatches);
   if (rcore == nullptr) {
+    std::cout << "AAA\n";
     BOOST_LOG(rdDebugLog) << "No core matches" << std::endl;
     return -1;
   }
@@ -287,6 +290,9 @@ int RGroupDecomposition::add(const ROMol &inmol) {
       }
     }
   }
+
+  std::cout << "BBB\n";
+
   // mark any wildcards in input molecule:
   for (auto &atom : mol.atoms()) {
     if (atom->getAtomicNum() == 0) {

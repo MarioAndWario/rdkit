@@ -33,6 +33,9 @@ bool hasLabel(const Atom *atom, unsigned int autoLabels) {
     atomHasLabel |= (atom->getAtomMapNum() > 0);
   }
   if (autoLabels & DummyAtomLabels) {
+    // TODO
+    // Definition of a dummy atom?
+    // !atom->hasQuery() && atom->getAtomicNum() == 0 && atom->getDegree() == 1
     atomHasLabel |= (atom->getAtomicNum() == 0 && atom->getDegree() == 1);
   }
   // don't match negative rgroups as these are used by AtomIndexRLabels which
@@ -222,8 +225,12 @@ bool RGroupDecompositionParameters::prepareCore(RWMol &core,
         found = true;
       }
     }
-
-    if (atom->getAtomicNum() == 0) {
+    // found = 0
+    std::cout << "found = " << found << std::endl;
+    // IMPORTANT
+    // BUGS HERE
+    if (!atom->hasQuery() && atom->getAtomicNum() == 0) {  // Dummy atom
+      std::cout << "Enter because atom->getAtomicNum() == 0\n";
       if (!found && (autoLabels & MDLRGroupLabels)) {
         unsigned int rgroup;
         if (atom->getPropIfPresent<unsigned int>(

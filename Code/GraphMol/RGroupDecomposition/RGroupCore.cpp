@@ -47,8 +47,11 @@ static std::vector<std::vector<int>> cartesianProduct(
 // move this to constructor if the create new core path can be removed from
 // RGroupDecomposition::add
 void RCore::init() {
-  findIndicesWithRLabel();
-  countUserRGroups();
+  // BUGS HERE
+  findIndicesWithRLabel();  // PASS
+
+  countUserRGroups();  // PASS
+
   buildMatchingMol();
 }
 
@@ -62,6 +65,13 @@ void RCore::findIndicesWithRLabel() {
       core_atoms_with_user_labels.set(atom->getIdx());
     }
   }
+
+  // core_atoms_with_user_labels.size() = 6
+  std::cout << "core_atoms_with_user_labels.size() = "
+            << core_atoms_with_user_labels.size() << std::endl;
+  // core_atoms_with_user_labels[0] = 0
+  std::cout << "core_atoms_with_user_labels[0] = "
+            << core_atoms_with_user_labels[0] << std::endl;
 }
 
 std::pair<RWMOL_SPTR, bool> RCore::extractCoreFromMolMatch(
@@ -408,8 +418,24 @@ void RCore::buildMatchingMol() {
     atom->setProp<int>(RLABEL_CORE_INDEX, atom->getIdx());
     // TODO for unlabelled core attachments if the heavy neighbor is not dummy
     // then keep one attachment
+    ///////////////////////////
+    // Master branch
+    // atom->getAtomicNum() = 6
+    // atom->getDegree() = 2
+    // isDummyRGroupAttachment(*atom) = 0
+    ///////////////////////////
+    // 6349
+    // atom->getAtomicNum() = 0
+    // atom->getDegree() = 2
+    // isDummyRGroupAttachment(*atom) = 0
+    std::cout << "atom->getAtomicNum() = " << atom->getAtomicNum() << std::endl;
+    std::cout << "atom->getDegree() = " << atom->getDegree() << std::endl;
+    std::cout << "isDummyRGroupAttachment(*atom) = "
+              << isDummyRGroupAttachment(*atom) << std::endl;
+
     if (atom->getAtomicNum() == 0 && atom->getDegree() == 1 &&
         isDummyRGroupAttachment(*atom)) {
+      // NOT HERE
       // remove terminal user R groups and save core atom index and mapping to
       // heavy neighbor
       atomsToRemove.push_back(atom);
@@ -420,6 +446,7 @@ void RCore::buildMatchingMol() {
   }
 
   for (auto atom : atomsToRemove) {
+    // std::cout << "HEre\n";
     matchingMol->removeAtom(atom);
   }
 }
@@ -818,17 +845,18 @@ int RCore::matchingIndexToCoreIndex(int matchingIndex) const {
   return atom->getProp<int>(RLABEL_CORE_INDEX);
 }
 
-// Create tautomer query for the matching mol on demand and cache for performance
-// If the tautomer query cannot be created (because we can't kekulize the query)
-// then nullptr will be returned and we revert to non-tautomer match
+// Create tautomer query for the matching mol on demand and cache for
+// performance If the tautomer query cannot be created (because we can't
+// kekulize the query) then nullptr will be returned and we revert to
+// non-tautomer match
 std::shared_ptr<TautomerQuery> RCore::getMatchingTautomerQuery() {
   if (!checkedForTautomerQuery) {
     try {
       // Enumerate tautomers from a sanitized copy of the matching molecule
       RWMol copy(*matchingMol);
-      // If the core has had rgroup labels removed when creating the matching mol
-      // then we need to update properties.  Should a full sanitization be done?
-      // MolOps::sanitizeMol(*copy);
+      // If the core has had rgroup labels removed when creating the matching
+      // mol then we need to update properties.  Should a full sanitization be
+      // done? MolOps::sanitizeMol(*copy);
       copy.updatePropertyCache(false);
       std::shared_ptr<TautomerQuery> tautomerQuery(
           TautomerQuery::fromMol(copy));

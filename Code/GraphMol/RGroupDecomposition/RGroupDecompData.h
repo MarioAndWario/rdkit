@@ -23,6 +23,7 @@ extern const std::string _rgroupInputDummy;
 
 struct RGroupDecompData {
   // matches[mol_idx] == vector of potential matches
+  // CHECK cores
   std::map<int, RCore> cores;
   std::map<std::string, int> newCores;  // new "cores" found along the way
   int newCoreLabel = EMPTY_CORE_LABEL;

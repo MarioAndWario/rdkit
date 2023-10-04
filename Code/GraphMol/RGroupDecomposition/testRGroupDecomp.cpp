@@ -2517,17 +2517,21 @@ M  END
 
   auto structure = "ClC1=CN=C(C=C1)N1CCCC1"_smiles;
   RGroupDecomposition decomp(*core);
+  std::cout << "decomp.add(*structure) = " << decomp.add(*structure)
+            << std::endl;
   TEST_ASSERT(decomp.add(*structure) == 0);
-  decomp.process();
-  auto rows = decomp.getRGroupsAsRows();
-  auto core_out = rows[0]["Core"];
-  auto core_mol_block = MolToMolBlock(*rows[0]["Core"]);
-  auto pos = core_mol_block.find("ALS");
-  TEST_ASSERT(pos == std::string::npos);
-  std::string expected(
-      "Core:c1cc([*:2])ncc1[*:1] R1:Cl[*:1] R2:C1CCN([*:2])C1");
-  RGroupRows::const_iterator it = rows.begin();
-  CHECK_RGROUP(it, expected);
+
+  TEST_ASSERT(false);
+  // decomp.process();
+  // auto rows = decomp.getRGroupsAsRows();
+  // auto core_out = rows[0]["Core"];
+  // auto core_mol_block = MolToMolBlock(*rows[0]["Core"]);
+  // auto pos = core_mol_block.find("ALS");
+  // TEST_ASSERT(pos == std::string::npos);
+  // std::string expected(
+  //     "Core:c1cc([*:2])ncc1[*:1] R1:Cl[*:1] R2:C1CCN([*:2])C1");
+  // RGroupRows::const_iterator it = rows.begin();
+  // CHECK_RGROUP(it, expected);
 }
 
 void testAlignOutputCoreToMolecule() {
@@ -3813,7 +3817,7 @@ void testEnumeratedCore() {
       << "********************************************************\n";
   BOOST_LOG(rdInfoLog) << "Test that enumerated cores behave properly"
                        << std::endl;
-  
+
   auto core = R"CTAB(
   Mrv2008 08242317002D          
 
@@ -3855,9 +3859,8 @@ M  END
   params.onlyMatchAtRGroups = false;
   params.doEnumeration = true;
 
-  const char *expected[] = {
-      "Core:Fc1ccc([*:2])cc1Cl R2:C[*:2]",
-      "Core:Fc1ccc(Cl)cc1[*:1] R1:CC[*:1]"};
+  const char *expected[] = {"Core:Fc1ccc([*:2])cc1Cl R2:C[*:2]",
+                            "Core:Fc1ccc(Cl)cc1[*:1] R1:CC[*:1]"};
 
   RGroupDecomposition decomp(*core, params);
   const auto add11 = decomp.add(*mol1);
@@ -3974,62 +3977,62 @@ int main() {
       << "********************************************************\n";
   BOOST_LOG(rdInfoLog) << "Testing R-Group Decomposition \n";
 
-#if 1
-  testSymmetryMatching(FingerprintVariance);
-  testSymmetryMatching();
-  testRGroupOnlyMatching();
-  testRingMatching();
-  testRingMatching3();
-  testMultiCore();
-  testGithub1550();
-  testRemoveHs();
+  // #if 1
+  //   testSymmetryMatching(FingerprintVariance);
+  //   testSymmetryMatching();
+  //   testRGroupOnlyMatching();
+  //   testRingMatching();
+  //   testRingMatching3();
+  //   testMultiCore();
+  //   testGithub1550();
+  //   testRemoveHs();
 
-  testMatchOnlyAtRgroupHs();
-  testRingMatching2();
-  testGitHubIssue1705();
-  testGithub2332();
-  testSDFGRoupMultiCoreNoneShouldMatch();
-  testRowColumnAlignmentProblem();
-  testSymmetryIssues();
-  testMultipleCoreRelabellingIssues();
+  //   testMatchOnlyAtRgroupHs();
+  //   testRingMatching2();
+  //   testGitHubIssue1705();
+  //   testGithub2332();
+  //   testSDFGRoupMultiCoreNoneShouldMatch();
+  //   testRowColumnAlignmentProblem();
+  //   testSymmetryIssues();
+  //   testMultipleCoreRelabellingIssues();
 
-  testGaSymmetryMatching(FingerprintVariance);
-  testGaSymmetryMatching(Match);
-  testGaBatch();
+  //   testGaSymmetryMatching(FingerprintVariance);
+  //   testGaSymmetryMatching(Match);
+  //   testGaBatch();
 
-  testUnprocessedMapping();
-  testSingleAtomBridge();
-#endif
-  testSymmetryPerformance();
-  testScorePermutations();
-  testMultiCorePreLabelled();
-  testCoreWithRGroupAdjQuery();
-  testGeminalRGroups();
-  testMatchOnAnyAtom();
-  testNoAlignmentAndSymmetry();
-  testAddedRGroupsHaveCoords();
-  testUserMatchTypes();
-  testUnlabelledRGroupsOnAromaticNitrogen();
-  testAddHsDoesNotFail();
-  testNoTempLabels();
-  testNoSideChains();
-  testDoNotAddUnnecessaryRLabels();
+  //   testUnprocessedMapping();
+  //   testSingleAtomBridge();
+  // #endif
+  //   testSymmetryPerformance();
+  //   testScorePermutations();
+  //   testMultiCorePreLabelled();
+  //   testCoreWithRGroupAdjQuery();
+  //   testGeminalRGroups();
+  //   testMatchOnAnyAtom();
+  //   testNoAlignmentAndSymmetry();
+  //   testAddedRGroupsHaveCoords();
+  //   testUserMatchTypes();
+  //   testUnlabelledRGroupsOnAromaticNitrogen();
+  //   testAddHsDoesNotFail();
+  //   testNoTempLabels();
+  //   testNoSideChains();
+  //   testDoNotAddUnnecessaryRLabels();
   testCoreWithAlsRecords();
-  testAlignOutputCoreToMolecule();
-  testWildcardInInput();
-  testDoNotChooseUnrelatedCores();
-  atomDegreePreconditionBug();
-  testGithub5222();
-  testGithub5569();
-  testGithub4505();
-  testMultipleGroupsToUnlabelledCoreAtomGithub5573();
-  testMultipleGroupsToUnlabelledCoreAtom();
-  testGitHub5631();
-  testGithub5613();
-  testRGroupCoordinatesAddedToCore();
-  testStereoGroupsPreserved();
-  testTautomerCore();
-  testEnumeratedCore();
+  // testAlignOutputCoreToMolecule();
+  // testWildcardInInput();
+  // testDoNotChooseUnrelatedCores();
+  // atomDegreePreconditionBug();
+  // testGithub5222();
+  // testGithub5569();
+  // testGithub4505();
+  // testMultipleGroupsToUnlabelledCoreAtomGithub5573();
+  // testMultipleGroupsToUnlabelledCoreAtom();
+  // testGitHub5631();
+  // testGithub5613();
+  // testRGroupCoordinatesAddedToCore();
+  // testStereoGroupsPreserved();
+  // testTautomerCore();
+  // testEnumeratedCore();
   BOOST_LOG(rdInfoLog)
       << "********************************************************\n";
   return 0;

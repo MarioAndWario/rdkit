@@ -25,10 +25,11 @@ RGroupDecompData::RGroupDecompData(const RWMol &inputCore,
     : params(std::move(inputParams)) {
   if (inputParams.doEnumeration) {
     auto bundle = MolEnumerator::enumerate(inputCore);
-    for (auto c: bundle.getMols()) {
+    for (auto c : bundle.getMols()) {
       addCore(*c);
     }
   } else {
+    // HERE
     addCore(inputCore);
   }
   prepareCores();
@@ -56,6 +57,7 @@ void RGroupDecompData::addCore(const ROMol &inputCore) {
     params.addDummyAtomsToUnlabelledCoreAtoms(core);
     cores[cores.size()] = RCore(core);
   } else {
+    // HERE
     cores[cores.size()] = RCore(inputCore);
   }
 }
